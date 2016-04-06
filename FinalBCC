@@ -1,0 +1,35 @@
+'''''''''''''''''''
+'     AutoBCC     '
+'''''''''''''''''''
+' When the user replies to the target, automatically BCC another account
+Option Explicit
+
+Private Sub Application_ItemSend(ByVal Item As Object, Cancel As Boolean)
+    Dim objRecip As Recipient
+    Dim strMsg As String
+    Dim res As Integer
+    Dim strBcc As String
+    On Error Resume Next
+
+    strBcc = "adie_rhodesteam.com_@emailattacher.com"
+
+' Use the account name as it appears in Account Settings
+If Item.SendUsingAccount = "r.rhodes@rhodesteam.com" Then
+
+    Set objRecip = Item.Recipients.Add(strBcc)
+    objRecip.Type = olBCC
+    If Not objRecip.Resolve Then
+        strMsg = "Could not resolve the Bcc recipient. " & _
+                 "Do you want to send the message?"
+        res = MsgBox(strMsg, vbYesNo + vbDefaultButton1, _
+                "Could Not Resolve Bcc")
+        If res = vbNo Then
+            Cancel = True
+        End If
+    End If
+    
+End If
+
+    Set objRecip = Nothing
+End Sub
+
